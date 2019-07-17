@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace asp_xamar_solution.Models
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
