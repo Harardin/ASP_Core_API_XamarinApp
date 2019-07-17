@@ -1,0 +1,27 @@
+﻿@model TransactionDataModel
+@{
+    ViewData["Title"] = "Transaction";
+}
+
+    <div class="form-row justify-content-center">
+        <div class="col-5">
+            <form asp-action="SendCoins">
+                <div class="form-group">
+                    <label asp-for="WalletData.UserName" class="custom-control-label">The recipient Name: @Model.WalletData.UserName</label>
+                    <input asp-for="WalletData.UserName" type="hidden" value="@Model.WalletData.UserName"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="WalletData.Coins" class="custom-control-label">Amount of Coins to transfer</label>
+                    <input asp-for="WalletData.Coins" type="number" class="input-group-text" />
+                    <span asp-validation-for="WalletData.Coins" class="text-danger">@Model.CoinFieldErrorMessage</span>
+                </div>
+                <label>Click "Send" if you want to transfer the coin to the recipient</label>
+                <div class="form-group">
+                    <input type="submit" value="Send" class="btn btn-primary" />
+                </div>
+                <div class="form-group">
+                    <a asp-controller="Wallet" asp-action="Main" class="btn btn-primary">Go Back</a>
+                </div>
+            </form>
+        </div>
+    </div>

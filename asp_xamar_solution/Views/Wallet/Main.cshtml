@@ -1,0 +1,103 @@
+﻿@model MainWalletModel
+
+@{
+    ViewData["Title"] = "Main";
+}
+
+
+<div class="alert-light">
+    <div class="text-left text-dark alert-info">Name: @Model.WalletData.UserName</div>
+    <div class="text-right text-dark alert-info">Coins: @Model.WalletData.Coins</div>
+    <div class="btn btn-primary text-dark">
+        <a asp-controller="Login" asp-action="SignOut">Sign Out</a>
+    </div>
+</div>
+
+<div>
+    <p class="text-center">Input Name of the Coins Reciever</p>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#UserName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Wallet/AutoComplete",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.UserName, value: item.UserName };
+                            }))
+
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        })
+    </script>
+    @using (Html.BeginForm(FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <hr />
+            <div class="form-group">
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Confirm" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <p>The Recipient Chosen Name: @Model.UserName</p>
+    }
+</div>
+
+<div>
+    <form asp-action="Main">
+        <table class="table table-bordered" style="width:100%">
+            <tr>
+                <th>
+                    TransactionDate
+                </th>
+                <th>
+                    Email of the recipient
+                </th>
+                <th>
+                    Name of the recipient
+                </th>
+                <th>
+                    Transaction Amount
+                </th>
+                <th>
+                    Rest Balance
+                </th>
+            </tr>
+            @foreach (var histroyRow in Model.TransactionsHistory)
+            {
+                <tr>
+                    <td>
+                        @histroyRow.trDate
+                    </td>
+                    <td>
+                        @histroyRow.CorrespondentEmail
+                    </td>
+                    <td>
+                        @histroyRow.CorrespondentName
+                    </td>
+                    <td>
+                        @histroyRow.trAmount
+                    </td>
+                    <td>
+                        @histroyRow.RestBalance
+                    </td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>
