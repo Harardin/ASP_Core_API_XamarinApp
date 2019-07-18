@@ -9,33 +9,38 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace asp_xamar_solution.Controllers
 {
     [Authorize]
     public class WalletController : Controller
     {
-        private IUserDataModel qUser;
         private IUserWalletData qWallet;
         private ITransactionsHistory qTransHistory;
-        public WalletController(IUserDataModel _qUser, IUserWalletData _qWallet, ITransactionsHistory _qTrans)
+        private readonly UserManager<IdentityUser> userManager;
+        public WalletController(IUserWalletData _qWallet, ITransactionsHistory _qTrans, UserManager<IdentityUser> _userManager)
         {
-            qUser = _qUser;
             qWallet = _qWallet;
             qTransHistory = _qTrans;
+            userManager = _userManager;
         }
 
         private MainWalletModel DataModel = new MainWalletModel();
 
         [HttpGet]
-        public IActionResult Main()
+        public async Task<IActionResult> Main()
         {
             // Getting User Data from cookie
+            // This throws NullReference now don't work with ASP.NET Identity
             string UserName = HttpContext.User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Name).Value;
-            string Email = HttpContext.User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Email).Value;
+            System.Diagnostics.Debug.WriteLine("This is the email of the user " + UserName);
+            IdentityUser UserData = await userManager.FindByNameAsync(UserName);
+            string Email = UserData.Email;
 
-            DataModel.WalletData = qWallet.QUserWalletData.Where(q => q.Email == Email).FirstOrDefault();
+            DataModel.WalletData = qWallet.QUserWalletData.Where(q => q.UserName == UserName).FirstOrDefault();
             DataModel.TransactionsHistory = qTransHistory.QTransactionHistory.Where(i => i.UserEmail == Email).ToList();
+            DataModel.TransactionsHistory.Sort((a, b) => b.trDate.CompareTo(a.trDate));
 
             return View(DataModel);
         }
@@ -45,13 +50,15 @@ namespace asp_xamar_solution.Controllers
             return RedirectToAction("SendCoins", "Transaction", new { recipient = mod.UserName });
         }
 
+
+        // Data for JS autocompeat form
         public async Task<JsonResult> AutoComplete(string Prefix)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
 
 
             List<MainWalletModel> mainWalletModels = new List<MainWalletModel>();
-            foreach(var zx in qUser.QUserData.ToList())
+            foreach(var zx in userManager.Users.ToList())
             {
                 mainWalletModels.Add(new MainWalletModel { UserName = zx.UserName });
             }

@@ -9,7 +9,6 @@ namespace asp_xamar_solution.Models
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
-        public DbSet<UserDataModel> UserData { get; set; }
         public DbSet<UserWalletData> WalletData { get; set; }
         public DbSet<TransactionsHistoryModel> TransHistory { get; set; }
     }

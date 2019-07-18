@@ -10,12 +10,7 @@ namespace asp_xamar_solution.CommonFunctions
         // This is Starter Coin pack
         private decimal starter = 500.0M;
 
-        public void CreateCoinData(ApplicationDBContext context, RegDataInput data)
-        {
-            Task.Run(async () => await AsyncCreateCoinData(context, data));
-        }
-
-        private async Task AsyncCreateCoinData(ApplicationDBContext context, RegDataInput data)
+        public async Task CreateCoinData(ApplicationDBContext context, RegDataInput data)
         {
             context.WalletData.Add(new UserWalletData { Email = data.Email, UserName = data.UserName, Coins = starter });
             await context.SaveChangesAsync();

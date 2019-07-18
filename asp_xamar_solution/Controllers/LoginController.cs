@@ -7,23 +7,22 @@ using asp_xamar_solution.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace asp_xamar_solution.Controllers
-{ 
+{
     public class LoginController : Controller
     {
         private LoginModel loginData = new LoginModel();
-        private IUserDataModel qData;
-        public LoginController(IUserDataModel dt)
+        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<IdentityUser> userManager;
+        public LoginController(SignInManager<IdentityUser> _signInManager, UserManager<IdentityUser> manager)
         {
-            qData = dt;
+            signInManager = _signInManager;
+            userManager = manager;
         }
-
-        private List<Claim> claims;
-        private AuthenticationProperties authProperties;
-        private ClaimsIdentity claimsIdentity;
 
         [AllowAnonymous]
         [HttpGet]
@@ -33,50 +32,27 @@ namespace asp_xamar_solution.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login(LoginModel login)
+        public async Task<IActionResult> Login(LoginModel data)
         {
-            if (login.Email.Contains('@') && login.Password != null && qData.QUserData.Any(user => user.Email == login.Email && user.Paswword == login.Password))
+            var user = await userManager.FindByEmailAsync(data.Email);
+
+            var result = await signInManager.PasswordSignInAsync(user.UserName, data.Password, data.RememberMe, lockoutOnFailure: false);
+            if(result.Succeeded)
             {
-                string Name = qData.QUserData.Where(q => q.Email == login.Email).Select(q => q.UserName).SingleOrDefault();
-
-                claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, Name),
-                    new Claim(ClaimTypes.Email, login.Email),
-                };
-                authProperties = new AuthenticationProperties()
-                {
-                    AllowRefresh = true,
-                    ExpiresUtc = DateTime.UtcNow.AddMinutes(100),
-                    IsPersistent = login.RememberMe
-                };
-                claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                Task.Run(async () => await SignAsync()).Wait();
-
-                // login was succesfull
                 return RedirectToAction("Main", "Wallet");
             }
             else
             {
-                login.Password = null;
-                login.LoginError = "Invalid Email or Password";
-                return View(login);
+                data.Password = null;
+                data.LoginError = "Invalid Email or Password";
+                return View(data);
             }
         }
         [Authorize]
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOut()
         {
-            Task.Run(async () => await OutAsync()).Wait();
+            await signInManager.SignOutAsync();
             return RedirectToAction("WelcomeAction", "Welcome");
-        }
-        private async Task SignAsync()
-        {
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-        }
-        private async Task OutAsync()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

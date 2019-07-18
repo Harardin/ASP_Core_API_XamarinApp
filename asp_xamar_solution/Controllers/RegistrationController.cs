@@ -6,6 +6,8 @@ using asp_xamar_solution.Models;
 using asp_xamar_solution.Models.NonQuaryableModels;
 using asp_xamar_solution.CommonFunctions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace asp_xamar_solution.Controllers
 {
@@ -13,10 +15,13 @@ namespace asp_xamar_solution.Controllers
     public class RegistrationController : Controller
     {
         private RegDataInput DataInput = new RegDataInput();
-        private ApplicationDBContext context;
-        public RegistrationController(ApplicationDBContext _context)
+        private readonly ApplicationDBContext context;
+        private readonly UserManager<IdentityUser> userManager;
+
+        public RegistrationController(ApplicationDBContext _context, UserManager<IdentityUser> _userManager)
         {
             context = _context;
+            userManager = _userManager;
         }
 
         [HttpGet]
@@ -25,36 +30,34 @@ namespace asp_xamar_solution.Controllers
             return View(DataInput);
         }
         
+        // This is using the ASP.NET Identity
         [HttpPost]
-        public IActionResult Registration(RegDataInput DT)
+        public async Task<IActionResult> Registration(RegDataInput data)
         {
-            RegistrationFunction registration = new RegistrationFunction();
-            if (DT.UserName != null && DT.Email != null && DT.Password != null && DT.ConfPassword != null)
+            if(ModelState.IsValid)
             {
-                if (DT.Email.Contains('@') && DT.Email.Contains('.'))
+                var user = new IdentityUser { UserName = data.UserName, Email = data.Email };
+                // This one stores the password as an MD5 Hash Aditional field as not encrypted password can be added
+                IdentityResult result = await userManager.CreateAsync(user, data.Password);
+                if (result.Succeeded)
                 {
-                    if (registration.Registration(context, DT))
-                    {
-                        // Return View That Say that all cool and you can try to login
-                        return View("RegSucces");
-                    }
-                    else
-                    {
-                        // And edding the errors about Email or other
-                        return View(DT);
-                    }
+                    CreateCoinDataAsync createCoin = new CreateCoinDataAsync();
+                    await createCoin.CreateCoinData(context, data);
+                    return View("RegSucces");
                 }
                 else
                 {
-                    // And edding the errors about Email or other
-                    return View(DT);
+                    foreach(var er in result.Errors)
+                    {
+                        // This will show the regestration error to user
+                        ModelState.AddModelError("", er.Description);
+                    }
+                    return View(data);
                 }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("DT compare wrong" + DT.Email + "Password " + DT.Password);
-                // Some fields waren't filled
-                return View(DT);
+                return View(data);
             }
         }
     }

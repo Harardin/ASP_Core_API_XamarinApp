@@ -7,6 +7,7 @@ using asp_xamar_solution.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using asp_xamar_solution.CommonFunctions;
+using Microsoft.AspNetCore.Identity;
 
 namespace asp_xamar_solution.Controllers
 {
@@ -14,9 +15,12 @@ namespace asp_xamar_solution.Controllers
     public class TransactionController : Controller
     {
         private ApplicationDBContext context;
-        public TransactionController(ApplicationDBContext ctx)
+        private readonly UserManager<IdentityUser> userManager;
+
+        public TransactionController(ApplicationDBContext ctx, UserManager<IdentityUser> _userManager)
         {
             context = ctx;
+            userManager = _userManager;
         }
         private string UserSender;
 
@@ -28,7 +32,7 @@ namespace asp_xamar_solution.Controllers
             return View(TransactionDataModel);
         }
         [HttpPost]
-        public IActionResult SendCoins(TransactionDataModel TrModel)
+        public async Task<IActionResult> SendCoins(TransactionDataModel TrModel)
         {
             if (TrModel.WalletData.Coins < 1)
             {
