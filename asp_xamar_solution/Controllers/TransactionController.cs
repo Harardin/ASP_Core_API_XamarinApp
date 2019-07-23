@@ -14,7 +14,7 @@ namespace asp_xamar_solution.Controllers
     [Authorize]
     public class TransactionController : Controller
     {
-        private ApplicationDBContext context;
+        private readonly ApplicationDBContext context;
         private readonly UserManager<IdentityUser> userManager;
 
         public TransactionController(ApplicationDBContext ctx, UserManager<IdentityUser> _userManager)
@@ -46,7 +46,7 @@ namespace asp_xamar_solution.Controllers
             {
                 // Saving Tr History
                 TransactionHistoryRecordClass historyRecord = new TransactionHistoryRecordClass();
-                historyRecord.SaveHistory(context, UserSender, TrModel.WalletData.UserName, TrModel.WalletData.Coins);
+                await historyRecord.SaveHistory(context, UserSender, TrModel.WalletData.UserName, TrModel.WalletData.Coins);
                 return View("TransCompleat");
             }
             else

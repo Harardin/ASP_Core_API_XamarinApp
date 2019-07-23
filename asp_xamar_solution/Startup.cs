@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using asp_xamar_solution.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace asp_xamar_solution
 {
@@ -41,8 +44,23 @@ namespace asp_xamar_solution
                 cookie.Cookie.Name = "asp-xamar-cookie";
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                    options.RequireHttpsMetadata = false; // This one actually better be true but can be false while on localhost
+                    options.SaveToken = true; // This one stores the Token dor the session
+                })
+                .AddCookie();
+            services.AddCors();
             
 
             services.AddMvc();
@@ -50,12 +68,17 @@ namespace asp_xamar_solution
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            if(env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            // This middleware is used only while developed
-            app.UseDeveloperExceptionPage();
-            //
             app.UseStatusCodePages();
             app.UseAuthentication();
             

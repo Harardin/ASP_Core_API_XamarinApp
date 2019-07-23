@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using asp_xamar_solution.Models;
 
 namespace asp_xamar_solution.CommonFunctions
 {
     public class TransactionHistoryRecordClass
     {
-        public void SaveHistory(ApplicationDBContext context, string Sender, string Reciever, decimal Amount)
+        public async Task SaveHistory(ApplicationDBContext context, string Sender, string Reciever, decimal Amount)
         {
             context.TransHistory.Add(new TransactionsHistoryModel
             {
@@ -17,7 +18,7 @@ namespace asp_xamar_solution.CommonFunctions
                 RestBalance = context.WalletData.Where(usr => usr.UserName == Sender).Select(am => am.Coins).FirstOrDefault(),
                 UserEmail = context.Users.Where(u => u.UserName == Sender).Select(ml => ml.Email).FirstOrDefault()
             });
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

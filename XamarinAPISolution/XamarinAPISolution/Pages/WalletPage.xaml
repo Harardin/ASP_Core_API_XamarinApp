@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:forms="clr-namespace:dotMorten.Xamarin.Forms;assembly=dotMorten.Xamarin.Forms.AutoSuggestBox"
+             mc:Ignorable="d"
+             x:Class="XamarinAPISolution.Pages.WalletPage">
+    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="5">
+        <Grid BackgroundColor="LightBlue" HorizontalOptions="FillAndExpand">
+            <Label x:Name="UserNameLable" Text="Name: unknown" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Start" Margin="10"/>
+            <Label x:Name="UserBalanceLable" Text="Balance: unknown" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="End" Margin="10"/>
+        </Grid>
+        <Label Text="Enter receiver name or email" HorizontalTextAlignment="Center" FontSize="Large" Margin="3"/>
+        <forms:AutoSuggestBox x:Name="UsersSearchField" />
+        <Label x:Name="RecipientError" FontSize="Medium" TextColor="Red" IsVisible="False" HorizontalTextAlignment="Center"/>
+        <Button Text="Send Coins" Clicked="ChoseReciever" />
+        <Label Text="Transactions history" HorizontalTextAlignment="Center" FontSize="Large" Margin="3"/>
+        <Grid x:Name="TransactionsHistoryGrid">
+            <Label Text="This is History grid lable"/>
+        </Grid>
+    </StackLayout>
+</ContentPage>

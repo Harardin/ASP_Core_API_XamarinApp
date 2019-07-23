@@ -35,6 +35,12 @@ namespace asp_xamar_solution.Controllers
         public async Task<IActionResult> Login(LoginModel data)
         {
             var user = await userManager.FindByEmailAsync(data.Email);
+            if (user == null)
+            {
+                // The user don't excists actually can be handlled better
+                return NotFound();
+            }
+
 
             var result = await signInManager.PasswordSignInAsync(user.UserName, data.Password, data.RememberMe, lockoutOnFailure: false);
             if(result.Succeeded)

@@ -6,8 +6,12 @@
              mc:Ignorable="d"
              x:Class="XamarinAPISolution.Views.WelcomeView">
   <ContentView.Content>
-      <StackLayout>
-          <Label Text="This is Welcome View" />
-      </StackLayout>
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+            <Label Text="Welcome" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+            <Label Text="SignIn if you have an account" FontSize="Medium" HorizontalTextAlignment="Center"/>
+            <Button Text="SignIn" BackgroundColor="LightBlue" CornerRadius="5" Clicked="Login"/>
+            <Label Text="Don't have an account SignUp" FontSize="Medium" HorizontalTextAlignment="Center"/>
+            <Button Text="SignUp" BackgroundColor="LightBlue" CornerRadius="5" Clicked="Registration" />
+        </StackLayout>
   </ContentView.Content>
 </ContentView>

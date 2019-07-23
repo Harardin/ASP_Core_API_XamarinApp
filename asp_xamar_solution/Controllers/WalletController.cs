@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using asp_xamar_solution.Models;
-using asp_xamar_solution.CommonFunctions;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Newtonsoft.Json;
@@ -39,8 +38,7 @@ namespace asp_xamar_solution.Controllers
             string Email = UserData.Email;
 
             DataModel.WalletData = qWallet.QUserWalletData.Where(q => q.UserName == UserName).FirstOrDefault();
-            DataModel.TransactionsHistory = qTransHistory.QTransactionHistory.Where(i => i.UserEmail == Email).ToList();
-            DataModel.TransactionsHistory.Sort((a, b) => b.trDate.CompareTo(a.trDate));
+            DataModel.TransactionsHistory = qTransHistory.QTransactionHistory.Where(i => i.UserEmail == Email).OrderByDescending(d => d.trDate).ToList();
 
             return View(DataModel);
         }

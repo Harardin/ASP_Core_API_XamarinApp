@@ -4,19 +4,29 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="XamarinAPISolution.Pages.LoginPage"
+             x:Class="XamarinAPISolution.Pages.RegistrationPage"
              xmlns:local="clr-namespace:XamarinAPISolution.Models"
              xmlns:Behaviors="clr-namespace:XamarinAPISolution.Behaviors"
              xmlns:Validators="clr-namespace:XamarinAPISolution.Behaviors.Validators.Functions">
     <ContentPage.BindingContext>
-        <local:LoginDataInput/>
+        <local:RegDataInput/>
     </ContentPage.BindingContext>
     <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="10">
         <StackLayout.Behaviors>
             <Behaviors:ValidationGroupBehavior x:Name="form"/>
         </StackLayout.Behaviors>
-        <Label Text="Sign in" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
-        <Entry Text="{Binding Email}" Placeholder="Enter your Email">
+        <Label Text="Sign up form" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+        <Label x:Name="ErrorMessage" Text="Error occured, please check your internet connection" FontSize="Large" HorizontalTextAlignment="Center" TextColor="Red" IsVisible="False"/>
+        <Entry Text="{Binding UserName}" Placeholder="UserName">
+            <Entry.Behaviors>
+                <Behaviors:ValidationBehavior Group="{x:Reference form}" PropertyType="Text">
+                    <Behaviors:ValidationBehavior.Validators>
+                        <Validators:RequiredFieldValidator/>
+                    </Behaviors:ValidationBehavior.Validators>
+                </Behaviors:ValidationBehavior>
+            </Entry.Behaviors>
+        </Entry>
+        <Entry Text="{Binding Email}" Placeholder="Email">
             <Entry.Behaviors>
                 <Behaviors:ValidationBehavior Group="{x:Reference form}" PropertyType="Text">
                     <Behaviors:ValidationBehavior.Validators>
@@ -26,7 +36,7 @@
                 </Behaviors:ValidationBehavior>
             </Entry.Behaviors>
         </Entry>
-        <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Enter your Password">
+        <Entry x:Name="PasswordEntry" Text="{Binding Password}" Placeholder="Password" IsPassword="True">
             <Entry.Behaviors>
                 <Behaviors:ValidationBehavior Group="{x:Reference form}" PropertyType="Text">
                     <Behaviors:ValidationBehavior.Validators>
@@ -35,10 +45,17 @@
                 </Behaviors:ValidationBehavior>
             </Entry.Behaviors>
         </Entry>
-        <Button x:Name="SignInButton" Text="SignIn" IsVisible="True" IsEnabled="{Binding Source={x:Reference form}, Path=IsValid}" HorizontalOptions="CenterAndExpand" BackgroundColor="LightBlue" CornerRadius="5" Clicked="Login" />
+        <Entry Text="{Binding ConfPassword}" Placeholder="Password Confirmation" IsPassword="True">
+            <Entry.Behaviors>
+                <Behaviors:ValidationBehavior Group="{x:Reference form}" PropertyType="Text">
+                    <Behaviors:ValidationBehavior.Validators>
+                        <Validators:RequiredFieldValidator/>
+                        <!--<Validators:FieldCompareValidator Field="{Binding Source={x:Reference PasswordEntry}, Path=Text}"  Message="Passwords do not match"/>-->
+                    </Behaviors:ValidationBehavior.Validators>
+                </Behaviors:ValidationBehavior>
+            </Entry.Behaviors>
+        </Entry>
+        <Button x:Name="RegistrationButton" Text="Confirm" IsVisible="True" IsEnabled="{Binding Source={x:Reference form}, Path=IsValid}" HorizontalOptions="CenterAndExpand" BackgroundColor="LightBlue" CornerRadius="5" Clicked="RegistrationClick" />
         <Label x:Name="LoadingLable" Text="Loading..." IsVisible="False" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray"/>
-        <Label x:Name="LoginError" Text="Invalid Email or Password" FontSize="Large" TextColor="Red" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" IsVisible="False"/>
-        <Label x:Name="CreateNewAccountLable" Text="Don't have an account SignUp now" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" IsVisible="False"/>
-        <Button x:Name="CreateNewAccountAction" Text="SignUp" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" BackgroundColor="LightBlue" CornerRadius="5" Clicked="CreateNewAccount"/>
     </StackLayout>
 </ContentPage>

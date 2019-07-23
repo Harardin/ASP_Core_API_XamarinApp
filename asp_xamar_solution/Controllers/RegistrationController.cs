@@ -36,7 +36,7 @@ namespace asp_xamar_solution.Controllers
         {
             if(ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = data.UserName, Email = data.Email };
+                IdentityUser user = new IdentityUser { UserName = data.UserName, Email = data.Email };
                 // This one stores the password as an MD5 Hash Aditional field as not encrypted password can be added
                 IdentityResult result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinAPISolution.Pages;
 
 namespace XamarinAPISolution.Views
 {
@@ -15,6 +16,16 @@ namespace XamarinAPISolution.Views
         public WelcomeView()
         {
             InitializeComponent();
+        }
+
+        private async void Registration(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new RegistrationPage(new Models.RegDataInput()));
+        }
+
+        private async void Login(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LoginPage(new Models.LoginDataInput()));
         }
     }
 }
