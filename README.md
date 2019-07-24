@@ -51,4 +51,4 @@ Here is the excample of ASP.NET API Controller code:
 
 Here is some screenshot how the application appearence looks like:
 
-![alt text](https://raw.githubusercontent.com/Harardin/No-ASP-Identity-Used-asp-xamar-solution-/ASPNETCORE_API_WithTokenAuth/XamarinAPISolution/XamarinAPISolution/ScreenShots/MainWalletScreen.jpg) ![alt text](https://raw.githubusercontent.com/Harardin/No-ASP-Identity-Used-asp-xamar-solution-/ASPNETCORE_API_WithTokenAuth/XamarinAPISolution/XamarinAPISolution/ScreenShots/TransactionScreen.jpg)
+![alt text](https://raw.githubusercontent.com/Harardin/ASP_Core_API_XamarinApp/ASPNETCORE_API_WithTokenAuth/XamarinAPISolution/XamarinAPISolution/ScreenShots/MainWalletScreen.jpg) ![alt text](https://raw.githubusercontent.com/Harardin/ASP_Core_API_XamarinApp/ASPNETCORE_API_WithTokenAuth/XamarinAPISolution/XamarinAPISolution/ScreenShots/TransactionScreen.jpg)
