@@ -13,21 +13,25 @@
         {
             return MainDomain + "api/Account/Registration";
         }
+        public string API_MakeTransaction_POST()
+        {
+            return MainDomain + "api/apiWallet/sendCoins";
+        }
 
         // GetMethods
         public string API_UserWalletInfo_GET()
         {
-            return MainDomain + "/api/apiWallet/UserData?email=";
+            return MainDomain + "api/apiWallet/UserData?email=";
         }
         public string API_TransactionsHistory_GET()
         {
-            return MainDomain + "/api/apiWallet/TransactionsHistory?email=";
+            return MainDomain + "api/apiWallet/TransactionsHistory?email=";
         }
         // This Get Method excists to make Autocompleat Users search field work
         // It also caches users in usersList.json (in the real project better to use SQL Lite or Redis do to size of users List)
         public string API_UsersList_GET()
         {
-            return MainDomain + "/api/apiWallet/users";
+            return MainDomain + "api/apiWallet/users";
         }
 
         // test request

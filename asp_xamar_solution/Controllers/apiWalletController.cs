@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using asp_xamar_solution.CommonFunctions;
 using asp_xamar_solution.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using XamarinAPISolution.Models;
 
 namespace asp_xamar_solution.Controllers
 {
@@ -16,11 +18,13 @@ namespace asp_xamar_solution.Controllers
     {
         private readonly IUserWalletData walletData;
         private readonly ITransactionsHistory transactionsHistory;
+        private ApplicationDBContext context;
 
-        public apiWalletController(IUserWalletData _wallet, ITransactionsHistory _transactions)
+        public apiWalletController(ApplicationDBContext _context, IUserWalletData _wallet, ITransactionsHistory _transactions)
         {
             walletData = _wallet;
             transactionsHistory = _transactions;
+            context = _context;
         }
 
         // Returns UserWalletData
@@ -68,6 +72,25 @@ namespace asp_xamar_solution.Controllers
         {
             public string Name { get; set; }
             public string Email { get; set; }
+        }
+
+        // Making Transaction
+        [HttpPost]
+        [Route("sendCoins")]
+        public async Task<IActionResult> SendCoins(Api_SendCoinsModel model)
+        {
+            TransactionFunctionClass transaction = new TransactionFunctionClass();
+            if (transaction.SendCoins(context, model.Sender, model.Reciever, model.Amount))
+            {
+                // Saving Tr History
+                TransactionHistoryRecordClass historyRecord = new TransactionHistoryRecordClass();
+                await historyRecord.SaveHistory(context, model.Sender, model.Reciever, model.Amount);
+                return Ok(new { result = true });
+            }
+            else
+            {
+                return Ok(new { result = false });
+            }
         }
     }
 }

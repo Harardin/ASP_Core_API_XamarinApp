@@ -6,18 +6,22 @@
              xmlns:forms="clr-namespace:dotMorten.Xamarin.Forms;assembly=dotMorten.Xamarin.Forms.AutoSuggestBox"
              mc:Ignorable="d"
              x:Class="XamarinAPISolution.Pages.WalletPage">
-    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="5">
-        <Grid BackgroundColor="LightBlue" HorizontalOptions="FillAndExpand">
-            <Label x:Name="UserNameLable" Text="Name: unknown" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Start" Margin="10"/>
-            <Label x:Name="UserBalanceLable" Text="Balance: unknown" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="End" Margin="10"/>
+    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="5" >
+        <StackLayout.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Down" Swiped="RefreshScreen"/>
+        </StackLayout.GestureRecognizers>
+        <Grid BackgroundColor="LightBlue" HorizontalOptions="CenterAndExpand" Padding="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Text="{Binding HostName}" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Start" Grid.Row="0"/>
+            <Label Text="{Binding HostBalance}" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="End" Grid.Row="0"/>
         </Grid>
-        <Label Text="Enter receiver name or email" HorizontalTextAlignment="Center" FontSize="Large" Margin="3"/>
+        <Label Text="Enter receiver name or email" FontSize="Medium" HorizontalOptions="Center"/>
         <forms:AutoSuggestBox x:Name="UsersSearchField" />
         <Label x:Name="RecipientError" FontSize="Medium" TextColor="Red" IsVisible="False" HorizontalTextAlignment="Center"/>
         <Button Text="Send Coins" Clicked="ChoseReciever" />
-        <Label Text="Transactions history" HorizontalTextAlignment="Center" FontSize="Large" Margin="3"/>
-        <Grid x:Name="TransactionsHistoryGrid">
-            <Label Text="This is History grid lable"/>
-        </Grid>
+        <Label Text="Transactions history" HorizontalTextAlignment="Center" FontSize="Medium"/>
+        <ListView x:Name="TrListView" HorizontalOptions="FillAndExpand"/>
     </StackLayout>
 </ContentPage>

@@ -19,7 +19,7 @@ namespace asp_xamar_solution.CommonFunctions
                 config["Jwt:Issuer"],
                 config["Jwt:Issuer"],
                 null,
-                expires: DateTime.Now.AddMinutes(120),
+                expires: DateTime.Now.AddDays(365),
                 signingCredentials: credentials
                 );
 

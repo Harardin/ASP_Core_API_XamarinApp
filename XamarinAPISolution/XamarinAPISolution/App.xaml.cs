@@ -14,9 +14,8 @@ namespace XamarinAPISolution
         public App()
         {
             InitializeComponent();
-
             // Here will be a check if token excists
-            /*if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "userToken.json")))
+            if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "userToken.json")))
             {
                 UserDataModel userModel = new UserDataModel();
                 string userJson = File.ReadAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "userToken.json"));
@@ -31,9 +30,7 @@ namespace XamarinAPISolution
             else
             {
                 MainPage = new NavigationPage(new MainPage());
-            }*/
-
-            MainPage = new NavigationPage(new WalletPage());
+            }
         }
 
         protected override void OnStart()
