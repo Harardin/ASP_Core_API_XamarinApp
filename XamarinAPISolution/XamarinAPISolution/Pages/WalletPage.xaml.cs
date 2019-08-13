@@ -105,7 +105,7 @@ namespace XamarinAPISolution.Pages
             TrListView.ItemTemplate = template;
             TrListView.ItemsSource = TrObservable;
             // Setting Data for Transactions History
-            Task.Run(async () => await SettingHistoryAsync(localUserData.useremail)).Wait();
+            Task.Run(async () => await SettingHistoryAsync(localUserData.useremail)).GetAwaiter().GetResults();
         }
 
 
