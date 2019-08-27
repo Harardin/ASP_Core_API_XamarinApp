@@ -105,7 +105,7 @@ namespace XamarinAPISolution.Pages
             TrListView.ItemTemplate = template;
             TrListView.ItemsSource = TrObservable;
             // Setting Data for Transactions History
-            Task.Run(async () => await SettingHistoryAsync(localUserData.useremail)).Wait();
+            Task.Run(async () => await SettingHistoryAsync(localUserData.useremail)).GetAwaiter().GetResults();
         }
 
 
@@ -113,7 +113,7 @@ namespace XamarinAPISolution.Pages
         private async Task SettingHistoryAsync(string email)
         {
             HttpResponseMessage responce = await httpClient.GetAsync(apiMethods.API_TransactionsHistory_GET() + email);
-            string JsonResponce = await responce.Content.ReadAsStringAsync();
+            string JsonResponce = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
             List<TransactionsHistoryModel> TrModel = new List<TransactionsHistoryModel>();
             TrModel = JsonConvert.DeserializeObject<List<TransactionsHistoryModel>>(JsonResponce).ToList();
             foreach(var model in TrModel)
@@ -126,7 +126,7 @@ namespace XamarinAPISolution.Pages
         private async Task GetListOfUsersAsync()
         {
             HttpResponseMessage responce = await httpClient.GetAsync(apiMethods.API_UsersList_GET());
-            string JsonResponce = await responce.Content.ReadAsStringAsync();
+            string JsonResponce = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
             UsersList = JsonConvert.DeserializeObject<List<UsersListModel>>(JsonResponce).ToList();
             UsersSearchField.ItemsSource = UsersList.Select(a => a.Name).ToList();
         }
@@ -134,7 +134,7 @@ namespace XamarinAPISolution.Pages
         private async Task GetHostUserDataAsync(string email)
         {
             HttpResponseMessage responce = await httpClient.GetAsync(apiMethods.API_UserWalletInfo_GET() + email);
-            string JsonResponce = await responce.Content.ReadAsStringAsync();
+            string JsonResponce = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
             userWalletData = JsonConvert.DeserializeObject<UserWalletData>(JsonResponce);
             HostName = "Name: " + userWalletData.UserName;
             HostBalance = "Balance: " + userWalletData.Coins;
